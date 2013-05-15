@@ -22,18 +22,26 @@ namespace HMF
     {
         static void Main(string[] args)
         {
-            using (FileStream fd = File.OpenRead("E://out.hmf"))
+            using (FileStream fd = File.OpenRead("E:\\out.hmf"))
             {
-                
+                System.Console.WriteLine(fd.Position);
+                int len = (int)fd.Length;
+                byte[] bs = new byte[len];
+                fd.Read(bs, 0, len);
+                System.Console.WriteLine("eee " + bs[0]);
+
                 Hmf h = new Hmf();
-                h.SetStream(fd);
+                MemoryStream st = new MemoryStream(bs);
+                st.Seek(0, SeekOrigin.Begin);
+                System.Console.WriteLine(st.Position);
+                h.SetStream(st);
                 System.Console.WriteLine(DateTime.Now.Second + "   " + DateTime.Now.Millisecond);
                 Dictionary<object, object> d = (Dictionary<object, object>)h.ReadObject();
                 System.Console.WriteLine(d.Count);
                 System.Console.WriteLine(DateTime.Now.Second + "   " + DateTime.Now.Millisecond);
             }
             System.Console.WriteLine("hello world");
-            Thread.Sleep(5000);
+            Thread.Sleep(10000);
         }
     }
 }

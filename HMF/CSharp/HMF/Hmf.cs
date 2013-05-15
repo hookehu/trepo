@@ -165,6 +165,7 @@ namespace HMF
         public object ReadObject()
         {
                 InitPool();
+                System.Console.WriteLine("p " + stream.Position);
                 byte tag = (byte)Util.ReadVarint(stream);
                 if(tag == Tag.ARRAY_TAG)
                 {
@@ -174,6 +175,7 @@ namespace HMF
                 {
                     return ReadDict();
                 }
+                System.Console.WriteLine("fuck " + tag);
                 return null;
         }
 

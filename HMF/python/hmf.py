@@ -103,6 +103,7 @@ class Hmf(object):
 						write_varint32(len(i), rst)
 						write_str(i, rst)
 				self.stream.seek(0)
+				print rst.len
 				rst.write(self.stream.read())
 				self.stream = rst
 				

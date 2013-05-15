@@ -10,9 +10,76 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
 from xml.etree import ElementTree as etree
-from hmf import Hmf
 import pyamf
+from util import *
+from hmf import Hmf
 
+def read_cfg(filename):
+		fd = open(filename, "rb")
+		content = fd.read()
+		fd.close()
+		x = etree.XML(content)
+		rst = {}
+		roots = x.getchildren()
+		for r in roots:
+				children = r.getchildren()
+				if len(children) == 0:
+						continue
+				r = {}
+				for i in children:
+						r[i.tag] = convert_value(i.tag, i.text)
+				if r.has_key('id_i'):
+						rst[r['id_i']] = r
+				else:
+					rst[r['id']] = r
+		return rst
+		
+def convert_value(key, value):
+		subfix = key[-2:]
+		if subfix == "_i":
+				if value == "":
+						return 0
+				return int(value)
+		elif subfix == "_f":
+				if value == "":
+						return 0.0
+				return float(value)
+		elif subfix == "_l":
+				if not isinstance(value, str) and not isinstance(value, unicode):
+						return [int(value)]
+				l = value.split(",")
+				for i in range(len(l)):
+						l[i] = int(l[i])
+				return l
+		elif subfix == "_k":
+				if not isinstance(value, str) and not isinstance(value, unicode):
+						return [int(value)]
+				k = value.split(",")
+				for i in range(len(k)):
+						k[i] = int(k[i])
+				return k
+		elif subfix == "_m":
+				if value == "":
+						return {}
+				m = value.split(",")
+				rv = {}
+				for i in range(len(m)):
+						kv = m[i].split(":")
+						if kv[0].isdigit():
+								k1 = int(kv[0])
+						else:
+								k1 = kv[0]
+						if kv[1].isdigit():
+								v1 = int(kv[1])
+						else:
+								v1 = kv[1]
+						rv[k1] = v1
+				return rv
+		elif subfix == "_s":
+				return value
+		else:
+				return value
+		
 def get_dict(element):
 		rst = {}
 		children = element.getchildren()
@@ -22,19 +89,10 @@ def get_dict(element):
 
 if __name__ == "__main__":
 		import time
-		path = "E://ItemEquipment.xml"
-		fd = open(path, 'rb')
-		content = fd.read()
-		fd.close()
-		print time.time()
-		x = etree.XML(content)
-		print time.time()
-		'''equips = x.findall('Equipment')
-		print len(equips)
-		o = {}
-		for i in equips:
-				r = get_dict(i)
-				o[r['id_i']] = r
+		path = "E://AvatarModel.xml"
+		o = read_cfg(path)
+		print o
+		print len(o)
 		h = Hmf()
 		h.write_object(o)
 		h.merge_all()
@@ -43,7 +101,11 @@ if __name__ == "__main__":
 		fd = open("E://out.hmf", "wb")
 		fd.write(s.read())
 		fd.close()
-		
+		s.seek(0)
+		print '--------------'
+		for i in range(s.len):
+				print hextoint(s.read(1))
+		'''
 		st = pyamf.encode(o)
 		fd = open("E://out.amf", "wb")
 		fd.write(st.read())
