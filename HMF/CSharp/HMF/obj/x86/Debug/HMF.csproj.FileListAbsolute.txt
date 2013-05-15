@@ -1,0 +1,5 @@
+D:\HMFCSharp\HMF\HMF\bin\Debug\HMF.exe
+D:\HMFCSharp\HMF\HMF\bin\Debug\HMF.pdb
+D:\HMFCSharp\HMF\HMF\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\HMFCSharp\HMF\HMF\obj\x86\Debug\HMF.exe
+D:\HMFCSharp\HMF\HMF\obj\x86\Debug\HMF.pdb
