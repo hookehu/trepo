@@ -37,11 +37,11 @@ def read_cfg(filename):
 def convert_value(key, value):
 		subfix = key[-2:]
 		if subfix == "_i":
-				if value == "":
+				if value == "" or value is None:
 						return 0
 				return int(value)
 		elif subfix == "_f":
-				if value == "":
+				if value == "" or value is None:
 						return 0.0
 				return float(value)
 		elif subfix == "_l":
@@ -59,7 +59,7 @@ def convert_value(key, value):
 						k[i] = int(k[i])
 				return k
 		elif subfix == "_m":
-				if value == "":
+				if value == "" or value is None:
 						return {}
 				m = value.split(",")
 				rv = {}
@@ -76,8 +76,12 @@ def convert_value(key, value):
 						rv[k1] = v1
 				return rv
 		elif subfix == "_s":
+				if value is None:
+						return ""
 				return value
 		else:
+				if value is None:
+						return ""
 				return value
 		
 def get_dict(element):
