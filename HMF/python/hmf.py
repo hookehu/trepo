@@ -41,7 +41,7 @@ class Hmf(object):
 				elif isinstance(obj, str):
 						self.write_string(obj)
 				else:
-						self.write_anonymous(obj)
+						pass
 						
 		def write_int(self, v):
 				write_varint32(INT_TAG, self.stream)
@@ -80,9 +80,6 @@ class Hmf(object):
 				write_varint32(l, self.stream)
 				for i in v:
 						self.write_object(i)
-				
-		def write_anonymous(self, v):
-				pass
 				
 		def write_dict(self, v):
 				#write object tag to stream

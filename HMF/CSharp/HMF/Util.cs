@@ -123,6 +123,23 @@ namespace HMF
             return BitConverter.ToDouble(s, 0);
         }
 
+        public static void WriteStr(string v, Stream stream)
+        {
+            char[] s = v.ToCharArray();
+            int len = s.Length;
+            for(int i = 0; i < len; i++)
+            {
+                stream.WriteByte((byte)s[i]);
+            }
+        }
+
+        public static string ReadStr(int len, Stream stream)
+        {
+            byte[] s = new byte[len];
+            stream.Read(s, 0, len);
+            return BitConverter.ToString(s);
+        }
+
         public static uint ToZigzag32(int v)
         {
             return (uint)((v << 1) ^ (v >> 31));

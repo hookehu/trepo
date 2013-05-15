@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.IO;
+using System.Timers;
 
 namespace HMF
 {
@@ -20,17 +22,16 @@ namespace HMF
     {
         static void Main(string[] args)
         {
-            double a = 4.1;
-
-            byte[] s = BitConverter.GetBytes(a);
-            System.Console.WriteLine(s[0]);
-            System.Console.WriteLine(s[1]);
-            System.Console.WriteLine(s[2]);
-            System.Console.WriteLine(s[3]);
-            System.Console.WriteLine(s[4]);
-            System.Console.WriteLine(s[5]);
-            System.Console.WriteLine(s[6]);
-            System.Console.WriteLine(s[7]);
+            using (FileStream fd = File.OpenRead("E://out.hmf"))
+            {
+                
+                Hmf h = new Hmf();
+                h.SetStream(fd);
+                System.Console.WriteLine(DateTime.Now.Second + "   " + DateTime.Now.Millisecond);
+                Dictionary<object, object> d = (Dictionary<object, object>)h.ReadObject();
+                System.Console.WriteLine(d.Count);
+                System.Console.WriteLine(DateTime.Now.Second + "   " + DateTime.Now.Millisecond);
+            }
             System.Console.WriteLine("hello world");
             Thread.Sleep(5000);
         }
