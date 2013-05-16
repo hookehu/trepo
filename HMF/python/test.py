@@ -10,7 +10,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
 from xml.etree import ElementTree as etree
-import pyamf
+from StringIO import StringIO
 from util import *
 from hmf import Hmf
 
@@ -102,19 +102,10 @@ if __name__ == "__main__":
 		o = read_cfg(path)
 		print o
 		print len(o)
+		stream = StringIO()
 		h = Hmf()
-		h.write_object(o)
-		h.merge_all()
-		print h.strs
-		#print len(h.strs)
-		s = h.stream
-		s.seek(0)
+		h.write_object(o, stream)
+		stream.seek(0)
 		fd = open("E://out.hmf", "wb")
-		fd.write(s.read())
+		fd.write(stream.read())
 		fd.close()
-		s.seek(0)
-		'''
-		st = pyamf.encode(o)
-		fd = open("E://out.amf", "wb")
-		fd.write(st.read())
-		fd.close()'''

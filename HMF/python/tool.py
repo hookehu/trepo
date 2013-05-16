@@ -34,6 +34,10 @@ def read_cfg(filename):
 		
 def convert_value(key, value):
 		subfix = key[-2:]
+		if isinstance(value, unicode):
+				return value.encode('utf-8')
+		return value
+		#under line not use
 		if subfix == "_i":
 				if value == "" or value is None:
 						return 0
