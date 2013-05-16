@@ -10,7 +10,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
 from xml.etree import ElementTree as etree
-import pyamf
+#import pyamf
 from util import *
 from hmf import Hmf
 
@@ -37,14 +37,16 @@ def read_cfg(filename):
 def convert_value(key, value):
 		subfix = key[-2:]
 		if subfix == "_i":
-				if value == "":
+				if value == "" or value is None:
 						return 0
 				return int(value)
 		elif subfix == "_f":
-				if value == "":
+				if value == "" or value is None:
 						return 0.0
 				return float(value)
 		elif subfix == "_l":
+				if value is None:
+						return []
 				if not isinstance(value, str) and not isinstance(value, unicode):
 						return [int(value)]
 				l = value.split(",")
@@ -52,6 +54,8 @@ def convert_value(key, value):
 						l[i] = int(l[i])
 				return l
 		elif subfix == "_k":
+				if value is None:
+						return []
 				if not isinstance(value, str) and not isinstance(value, unicode):
 						return [int(value)]
 				k = value.split(",")
@@ -59,7 +63,7 @@ def convert_value(key, value):
 						k[i] = int(k[i])
 				return k
 		elif subfix == "_m":
-				if value == "":
+				if value == "" or value is None:
 						return {}
 				m = value.split(",")
 				rv = {}
@@ -76,8 +80,12 @@ def convert_value(key, value):
 						rv[k1] = v1
 				return rv
 		elif subfix == "_s":
+				if value is None:
+						return ''
 				return value
 		else:
+				if value is None:
+						return ''
 				return value
 		
 def get_dict(element):

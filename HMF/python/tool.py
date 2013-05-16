@@ -12,6 +12,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 from xml.etree import ElementTree as etree
 from hmf import Hmf
 
+subfixs = ['_i', '_f', '_s', '_l', '_k', '_m']
+
 def read_cfg(filename):
 		fd = open(filename, "rb")
 		content = fd.read()
@@ -25,24 +27,39 @@ def read_cfg(filename):
 						continue
 				r = {}
 				for i in children:
-						r[i.tag] = convert_value(i.tag, i.text)
+						if i.tag[-2:] in subfixs:
+								r[i.tag[:-2]] = convert_value(i.tag, i.text)
+						else:
+								r[i.tag] = convert_value(i.tag, i.text)
+				if not r.has_key('id_i') and not r.has_key('id'):
+						continue
 				if r.has_key('id_i'):
 						rst[r['id_i']] = r
 				else:
-					rst[r['id']] = r
+						rst[r['id']] = r
 		return rst
 		
 def convert_value(key, value):
 		subfix = key[-2:]
+		if value is None:
+				return ""
+		if isinstance(value, unicode):
+				return value.encode('utf-8')
+		return value
 		if subfix == "_i":
-				if value == "":
+				if value == "" or value is None:
 						return 0
-				return int(value)
+				try:
+						return int(value)
+				except:
+						return float(value)
 		elif subfix == "_f":
-				if value == "":
+				if value == "" or value is None:
 						return 0.0
 				return float(value)
 		elif subfix == "_l":
+				if value is None:
+						return []
 				if not isinstance(value, str) and not isinstance(value, unicode):
 						return [int(value)]
 				l = value.split(",")
@@ -50,6 +67,8 @@ def convert_value(key, value):
 						l[i] = int(l[i])
 				return l
 		elif subfix == "_k":
+				if value is None:
+						return []
 				if not isinstance(value, str) and not isinstance(value, unicode):
 						return [int(value)]
 				k = value.split(",")
@@ -57,7 +76,7 @@ def convert_value(key, value):
 						k[i] = int(k[i])
 				return k
 		elif subfix == "_m":
-				if value == "":
+				if value == "" or value is None:
 						return {}
 				m = value.split(",")
 				rv = {}
@@ -74,25 +93,30 @@ def convert_value(key, value):
 						rv[k1] = v1
 				return rv
 		elif subfix == "_s":
+				if value is None:
+						return ''
 				return value
 		else:
+				if value is None:
+						return ''
 				return value
 		
 if __name__ == "__main__":
 		import sys, os, dircache
-		base_path = '''E:/mogo/doc/product/≈‰÷√±Ì/xmlŒƒº˛◊Ó÷’∞Ê/'''
+		base_path = '''E:/mogo/doc/product/ÈÖçÁΩÆË°®/xmlÊñá‰ª∂ÊúÄÁªàÁâà/'''
 		out_path = '''E:/hmfoutput/'''
-		files = dircache.listdir(base_path)
+		files = dircache.listdir(unicode(base_path, "utf-8"))
 		for name in files:
 				if name == '.svn':
 						continue
 				print name
-				r = read_cfg(base_path + name)
+				r = read_cfg(unicode(base_path, "utf-8") + name)
+				#print r
 				h = Hmf()
 				h.write_object(r)
 				h.merge_all()
 				s = h.stream
 				s.seek(0)
-				fd = open(out_path + name[:-4] + '.hmf', "wb")
+				fd = open(out_path + name[:-4] + '.bytes', "wb")
 				fd.write(s.read())
 				fd.close()
