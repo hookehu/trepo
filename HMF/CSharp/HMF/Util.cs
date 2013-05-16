@@ -137,7 +137,7 @@ namespace HMF
         {
             byte[] s = new byte[len];
             stream.Read(s, 0, len);
-            return BitConverter.ToString(s);
+            return System.Text.Encoding.UTF8.GetString(s);
         }
 
         public static uint ToZigzag32(int v)
