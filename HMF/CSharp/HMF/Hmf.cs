@@ -24,13 +24,13 @@ namespace HMF
         private List<bool> bools = new List<bool>();
         private List<string> strs = new List<string>();
 
-        private Stream stream = new MemoryStream();
+        private Stream stream = null;
 
         public Hmf()
         {
         }
 
-        public void Reset()
+        private void Reset()
         {
             ints = new List<int>();
             doubles = new List<double>();
@@ -38,15 +38,22 @@ namespace HMF
             bools = new List<bool>();
             bools.Add(false);
             bools.Add(true);
-            stream = new MemoryStream();
+            stream = null;
         }
 
-        public void SetStream(Stream stream)
+        private void SetStream(Stream stream)
         {
             this.stream = stream;
         }
 
-        public void WriteObject(object obj)
+        public void WriteObject(object obj, Stream stream)
+        {
+            SetStream(stream);
+            RealWrite(obj);
+            MergeAll();
+        }
+
+        private void RealWrite(object obj)
         {
             if(obj.GetType() == typeof(int))
             {
@@ -119,7 +126,7 @@ namespace HMF
             Util.WriteVarint(len, stream);
             for (int i = 0; i < len; i++)
             {
-                WriteObject(v[i]);
+                RealWrite(v[i]);
             }
         }
 
@@ -130,8 +137,8 @@ namespace HMF
             Util.WriteVarint(len, stream);
             foreach (var i in v)
             {
-                WriteObject(i.Key);
-                WriteObject(i.Value);
+                RealWrite(i.Key);
+                RealWrite(i.Value);
             }
         }
 
@@ -155,27 +162,39 @@ namespace HMF
                 Util.WriteStr(strs[i], st);
             }
             stream.Position = 0;
-            int len = (int)stream.Length;
-            byte[] s = new byte[len];
-            stream.Read(s, 0, len);
-            st.Write(s, 0, s.Length);
-            stream = st;
+            st.Position = 0;
+            int stLen = (int)st.Length;
+            int streamLen = (int)st.Length;
+            byte[] stBytes = new byte[stLen];
+            byte[] streamBytes = new byte[streamLen];
+            stream.Read(streamBytes, 0, streamLen);
+            st.Read(stBytes, 0, stLen);
+            stream.Position = 0;
+            stream.Write(stBytes, 0, stLen);
+            stream.Write(streamBytes, 0, streamLen);
         }
 
-        public object ReadObject()
+        public object ReadObject(Stream stream)
         {
+                SetStream(stream);
                 InitPool();
                 System.Console.WriteLine("p " + stream.Position);
                 byte tag = (byte)Util.ReadVarint(stream);
+                object rst = null;
                 if(tag == Tag.ARRAY_TAG)
                 {
-                    return ReadArray();
+                    rst = ReadArray();
+                    Reset();
+                    return rst;
                 }
                 else if(tag == Tag.OBJECT_TAG)
                 {
-                    return ReadDict();
+                    rst = ReadDict();
+                    Reset();
+                    return rst;
                 }
                 System.Console.WriteLine("fuck " + tag);
+                Reset();
                 return null;
         }
 
