@@ -38,9 +38,10 @@ class Hmf(object):
 						self.write_int(obj)
 				elif isinstance(obj, float):
 						self.write_number(obj)
-				elif isinstance(obj, str):
+				elif isinstance(obj, str) or isinstance(obj, unicode):
 						self.write_string(obj)
 				else:
+						print 'error'
 						pass
 						
 		def write_int(self, v):
@@ -69,6 +70,7 @@ class Hmf(object):
 						idx = self.strs.index(v)
 						write_varint32(idx, self.stream)
 						return
+				
 				self.strs.append(v)
 				idx = len(self.strs) - 1
 				write_varint32(idx, self.stream)
@@ -145,6 +147,7 @@ class Hmf(object):
 								v = self.strs[read_varint32(self.stream)]
 						elif tag == DOUBLE_TAG:
 								v = self.doubles[read_varint32(self.stream)]
+						print k
 						d[k] = v
 				return d
 				
@@ -189,7 +192,7 @@ if __name__ == "__main__":
 		h.reset()
 		s.seek(0)
 		print s.len
-		h.parse(s)
+		h.set_stream(s)
 		e = h.read_object()
 		print e
 		print "success"'''
@@ -204,14 +207,4 @@ if __name__ == "__main__":
 		e = h.read_object()
 		print len(e)
 		fd.close()
-		print time.time()
-		print '-----------------'
-		fd = open("E://out.amf", "rb")
-		#s = fd.read()
-		#fd.close()
-		print time.time()
-		o = pyamf.decode(fd).readElement()
-		
-		print time.time()
-		print len(o)
 		

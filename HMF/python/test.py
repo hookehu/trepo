@@ -36,6 +36,11 @@ def read_cfg(filename):
 		
 def convert_value(key, value):
 		subfix = key[-2:]
+		if value is None:
+				return ''
+		if isinstance(value, unicode):
+				return value.encode('utf-8')
+		return value
 		if subfix == "_i":
 				if value == "" or value is None:
 						return 0
@@ -93,22 +98,21 @@ def get_dict(element):
 
 if __name__ == "__main__":
 		import time
-		path = "E://AvatarModel.xml"
+		path = "E://ChineseData.xml"
 		o = read_cfg(path)
 		print o
 		print len(o)
 		h = Hmf()
 		h.write_object(o)
 		h.merge_all()
+		print h.strs
+		#print len(h.strs)
 		s = h.stream
 		s.seek(0)
 		fd = open("E://out.hmf", "wb")
 		fd.write(s.read())
 		fd.close()
 		s.seek(0)
-		print '--------------'
-		for i in range(s.len):
-				print hextoint(s.read(1))
 		'''
 		st = pyamf.encode(o)
 		fd = open("E://out.amf", "wb")
