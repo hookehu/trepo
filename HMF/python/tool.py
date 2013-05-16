@@ -46,6 +46,7 @@ def convert_value(key, value):
 		if isinstance(value, unicode):
 				return value.encode('utf-8')
 		return value
+		#under line not use
 		if subfix == "_i":
 				if value == "" or value is None:
 						return 0

@@ -34,9 +34,8 @@ namespace HMF
                 MemoryStream st = new MemoryStream(bs);
                 st.Seek(0, SeekOrigin.Begin);
                 System.Console.WriteLine(st.Position);
-                h.SetStream(st);
                 System.Console.WriteLine(DateTime.Now.Second + "   " + DateTime.Now.Millisecond);
-                Dictionary<object, object> d = (Dictionary<object, object>)h.ReadObject();
+                Dictionary<object, object> d = (Dictionary<object, object>)h.ReadObject(st);
                 System.Console.WriteLine(d.Count);
                 System.Console.WriteLine(DateTime.Now.Second + "   " + DateTime.Now.Millisecond);
             }
