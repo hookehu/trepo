@@ -104,6 +104,7 @@ def convert_value(key, value):
 		
 if __name__ == "__main__":
 		import sys, os, dircache
+		from StringIO import StringIO
 		base_path = '''E:/mogo/doc/product/配置表/xml文件最终版/'''
 		out_path = '''E:/hmfoutput/'''
 		files = dircache.listdir(unicode(base_path, "utf-8"))
@@ -112,12 +113,11 @@ if __name__ == "__main__":
 						continue
 				print name
 				r = read_cfg(unicode(base_path, "utf-8") + name)
+				stream = StringIO()
 				#print r
 				h = Hmf()
-				h.write_object(r)
-				h.merge_all()
-				s = h.stream
-				s.seek(0)
+				h.write_object(r, stream)
+				stream.seek(0)
 				fd = open(out_path + name[:-4] + '.bytes', "wb")
-				fd.write(s.read())
+				fd.write(stream.read())
 				fd.close()
