@@ -1,14 +1,14 @@
 #-*- coding:utf-8 -*-
-import sys, os, shutil, struct
+import sys, os, shutil, struct, zlib
 
 path = "E:/pngs"
 
 class PNGDecoder(object):
 		def __init__(self):
-				pass
 				self.cnt = 0
 				
 		def analyse(self, p):
+				self.idat = None
 				fd = open(p, 'rb')
 				self.readSig(fd)
 				while True:
@@ -26,6 +26,7 @@ class PNGDecoder(object):
 						handler = getattr(self, "read" + t)
 						handler(fd, l)
 				elif t == "IEND":
+						self.idat = zlib.decompress(self.idat)
 						return False
 				else:
 						print "unknown chunk %s " % t
@@ -89,6 +90,8 @@ class PNGDecoder(object):
 				self.interlace = interlace
 				if interlace == 1:
 						print p
+				print "width = %d, height = %d, bitdepth = %d, colortype = %d, compression = %d, filtermethod = %d, interlace = %d" %\
+							(w, h, bitdepth, colortype, compression, filtermethod, interlace)
 				return w, h, bitdepth, colortype, compression, filtermethod, interlace
 				
 		def readCRC(self, fd):
@@ -114,9 +117,18 @@ class PNGDecoder(object):
 		
 		def readIDAT(self, fd, length):
 				rst = []
-				for i in range(length):
-						fd.read(1)
-				self.idat = rst
+				#for i in range(length):
+				#		fd.read(1)
+				if self.idat is None:
+						self.idat = fd.read(length)
+						return rst
+				self.idat = self.idat + fd.read(length)
+				#self.idat = zlib.decompress(self.idat)
+				#print 1024 * 512
+				#print struct.unpack('B', self.idat[0])
+				#print struct.unpack('B', self.idat[1025])
+				#print struct.unpack('B', self.idat[2050])
+				#print len(self.idat)
 				return rst
 				
 		def readcHRM(self, fd, length):
@@ -199,6 +211,7 @@ class PNGDecoder(object):
 						self.red = struct.unpack('B', fd.read(1))[0]
 						self.green = struct.unpack('B', fd.read(1))[0]
 						self.blue = struct.unpack('B', fd.read(1))[0]
+						print "sBit R = %d, G = %d, B = %d" % (self.red, self.green, self.blue)
 				elif self.color_type == 4:
 						self.grey_scale = struct.unpack('B', fd.read(1))[0]
 						self.alpha = struct.unpack('B', fd.read(1))[0]
@@ -207,6 +220,7 @@ class PNGDecoder(object):
 						self.green = struct.unpack('B', fd.read(1))[0]
 						self.blue = struct.unpack('B', fd.read(1))[0]
 						self.alpha = struct.unpack('B', fd.read(1))[0]
+						print "sBit R = %d, G = %d, B = %d, A = %d" % (self.red, self.green, self.blue, self.alpha)
 				else:
 						#if err color type, jump the chunk
 						for i in range(length):
