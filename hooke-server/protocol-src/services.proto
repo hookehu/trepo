@@ -1,0 +1,18 @@
+package foo.bar;
+
+option cc_generic_services = true;
+
+message FooReq
+{
+    required int32 id = 1;
+}
+
+message FooResp
+{
+    required int32 code = 1;
+}
+
+service Foo
+{
+    rpc Bar(FooReq) returns(FooResp);
+}

@@ -1,0 +1,2 @@
+main:unit_test/log_test.cc kernel/log.h kernel/log.cc
+	g++ -stdlib=libstdc++ -g -o log_main unit_test/log_test.cc kernel/log.h kernel/log.cc
