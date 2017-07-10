@@ -1,11 +1,10 @@
-#include "../kernel/hooke-server.h"
+#include "../kernel/net.h"
 
 int main(int argc, char** argv)
 {
-    char address[] = "127,0,0,1\0";
-    struct event_base* base = InitServer();
-    struct server* svr = GetServer(base, address, 5678);
-    PreServer(svr);
+    char address[] = "127.0.0.1";
+    int efd = InitServer();
+    struct server* svr = GetServer(efd, address, 5678);
     StartServer(svr);
     printf("ffff");
     return 0;
