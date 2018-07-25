@@ -1,3 +1,4 @@
+#!/usr/bin/python
 #-*- coding:utf-8 -*-
 '''
 The MIT License (MIT)
@@ -11,7 +12,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 '''
 import os
 import wx
-import mgrs
+import manager as mgrs
 
 class WinApp(wx.App):
 		def OnInit(self):
@@ -140,3 +141,4 @@ def main():
 		
 if __name__ == "__main__":
 		main()
+		print('aaa')

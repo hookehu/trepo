@@ -547,3 +547,49 @@ mouse move
 mouse move
 mouse move
 mouse move
+main.py:33: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:36: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:39: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:42: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:45: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:48: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:51: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:54: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:57: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+Traceback (most recent call last):
+  File "main.py", line 23, in OnInit
+    self.prj_mgr = mgrs.PrjMgr(self)
+AttributeError: 'module' object has no attribute 'PrjMgr'
+OnInit returned false, exiting...
+main.py:33: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:36: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:39: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:42: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:45: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:48: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:51: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:54: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+main.py:57: wxPyDeprecationWarning: Call to deprecated item. Use Append instead.
+  menu.AppendItem(item)
+Traceback (most recent call last):
+  File "main.py", line 23, in OnInit
+    self.prj_mgr = mgrs.PrjMgr(self)
+AttributeError: 'module' object has no attribute 'PrjMgr'
+OnInit returned false, exiting...
